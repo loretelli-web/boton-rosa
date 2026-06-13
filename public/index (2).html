@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#D45C7A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="/iconorosa.png">
+<link rel="icon" type="image/png" href="/iconorosa.png">
+<meta property="og:title" content="Botón Rosa — Contención. Fuerza. Acompañamiento.">
+<meta property="og:description" content="Un espacio de regulación emocional para mujeres en tratamiento oncológico. Miedo, culpa y soledad: acá podés soltarlos.">
+<meta property="og:image" content="https://boton-rosa.vercel.app/logobotonrosa.png">
+<meta property="og:type" content="website">
+<title>Botón Rosa — Regulación Emocional Inmediata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { height: 100%; }
+  body { font-family: 'Poppins', sans-serif; background: #FDF0F3; min-height: 100%; display: flex; justify-content: center; }
+  .app { width: 100%; max-width: 460px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 0 22px 52px; }
+
+  .header { width:100%; padding:28px 0 16px; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .brand-main { font-family:'Playfair Display',serif; font-size:21px; color:#8B2A42; letter-spacing:.04em; }
+  .brand-sub { font-size:10px; font-weight:300; letter-spacing:.18em; text-transform:uppercase; color:#9C7080; opacity:.7; }
+  .header-divider { width:32px; height:1.5px; background:#E8A0B0; margin-top:8px; border-radius:2px; }
+
+  .screen { display:none; flex-direction:column; align-items:center; width:100%; }
+  .screen.active { display:flex; }
+
+  .welcome-eyebrow { font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:#D45C7A; font-weight:500; text-align:center; margin-top:24px; }
+  .welcome-title { font-family:'Playfair Display',serif; font-size:34px; line-height:1.2; color:#2C2C2C; margin-top:10px; text-align:center; }
+  .welcome-title em { font-style:italic; color:#D45C7A; }
+  .welcome-sub { font-size:14px; line-height:1.7; color:#7A5060; margin-top:14px; text-align:center; font-weight:300; max-width:300px; }
+
+  .pulse-wrap { margin:44px 0 32px; display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .pulse-btn { width:148px; height:148px; border-radius:50%; background:#D45C7A; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; animation:pulseRosa 2.8s ease-in-out infinite; transition:transform .15s; box-shadow:0 8px 32px rgba(212,92,122,.25); }
+  .pulse-btn:active { transform:scale(.95); animation:none; }
+  .pulse-btn-label { font-family:'Playfair Display',serif; font-size:15px; font-style:italic; color:white; text-align:center; line-height:1.3; pointer-events:none; }
+  .pulse-btn-sub { font-size:10px; font-weight:300; color:rgba(255,255,255,.65); pointer-events:none; }
+  @keyframes pulseRosa { 0%{box-shadow:0 0 0 0 rgba(212,92,122,.35)}70%{box-shadow:0 0 0 26px rgba(212,92,122,0)}100%{box-shadow:0 0 0 0 rgba(212,92,122,0)} }
+  .pulse-hint { font-size:12px; color:#9C7080; font-weight:300; opacity:.7; }
+
+  .section-title { font-family:'Playfair Display',serif; font-size:22px; line-height:1.3; text-align:center; color:#2C2C2C; margin-bottom:6px; margin-top:8px; }
+  .section-sub { font-size:13px; color:#9C7080; text-align:center; margin-bottom:22px; font-weight:300; line-height:1.55; }
+
+  .usuario-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; width:100%; }
+  .usuario-card { background:#FFF7F9; border:1.5px solid #F0C0CC; border-radius:16px; padding:18px 12px; cursor:pointer; text-align:center; display:flex; flex-direction:column; align-items:center; gap:7px; transition:all .2s; -webkit-user-select:none; }
+  .usuario-card.selected { border-color:#D45C7A; background:#FCE4EB; }
+  .usuario-icon { font-size:26px; }
+  .usuario-label { font-size:13px; font-weight:500; color:#2C2C2C; line-height:1.3; }
+  .usuario-sublabel { font-size:11px; font-weight:300; color:#9C7080; line-height:1.3; }
+
+  .badge { display:inline-flex; align-items:center; gap:6px; background:#FCE4EB; border:1px solid #E8A0B0; border-radius:20px; padding:5px 13px; font-size:12px; color:#8B2A42; font-weight:500; margin-bottom:18px; margin-top:4px; }
+
+  .feel-label { font-size:13px; color:#9C7080; margin-bottom:8px; font-weight:300; line-height:1.6; width:100%; }
+  .feel-textarea { width:100%; min-height:100px; border:1.5px solid #F0C0CC; border-radius:14px; padding:14px; font-family:'Poppins',sans-serif; font-size:15px; font-weight:300; color:#2C2C2C; background:#FFF7F9; resize:none; outline:none; transition:border-color .2s; line-height:1.6; }
+  .feel-textarea:focus { border-color:#D45C7A; }
+
+  .chips-label { font-size:11px; color:#E8A0B0; font-weight:400; margin-bottom:8px; width:100%; letter-spacing:.05em; text-transform:uppercase; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px; width:100%; }
+  .chip { background:#FFF7F9; border:1.5px solid #F0C0CC; border-radius:20px; padding:7px 13px; font-size:12px; cursor:pointer; transition:all .15s; color:#9C7080; font-family:'Poppins',sans-serif; -webkit-user-select:none; }
+  .chip.active { background:#FCE4EB; border-color:#D45C7A; color:#8B2A42; }
+
+  .btn-main { width:100%; padding:17px; background:#D45C7A; color:white; border:none; border-radius:14px; font-family:'Poppins',sans-serif; font-size:15px; font-weight:500; cursor:pointer; transition:background .2s,transform .1s; -webkit-appearance:none; }
+  .btn-main:active { transform:scale(.98); background:#8B2A42; }
+  .btn-main:disabled { background:#E8A0B0; cursor:not-allowed; }
+  .btn-ghost { background:none; border:1.5px solid #F0C0CC; color:#9C7080; border-radius:14px; padding:13px; font-family:'Poppins',sans-serif; font-size:14px; cursor:pointer; width:100%; margin-top:10px; -webkit-appearance:none; }
+  .btn-ghost:active { border-color:#D45C7A; color:#8B2A42; }
+  .back-btn { background:none; border:none; color:#9C7080; font-size:12px; cursor:pointer; padding:8px 0; display:flex; align-items:center; gap:4px; font-family:'Poppins',sans-serif; margin-top:4px; font-weight:300; align-self:flex-start; }
+
+  .loading-wrap { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:65vh; gap:22px; width:100%; }
+  .breath-circle { width:88px; height:88px; border-radius:50%; background:#E8A0B0; animation:breathe 4s ease-in-out infinite; opacity:.75; }
+  @keyframes breathe { 0%,100%{transform:scale(.82);opacity:.5}50%{transform:scale(1.18);opacity:.9} }
+  .loading-text { font-size:14px; color:#9C7080; font-weight:300; text-align:center; line-height:1.7; }
+  .loading-sub { font-size:11px; color:#E8A0B0; text-align:center; font-weight:300; letter-spacing:.05em; }
+
+  .response-card { background:#FFF7F9; border-radius:20px; padding:26px 22px; width:100%; margin-top:6px; border:1px solid #F0C0CC; box-shadow:0 4px 24px rgba(212,92,122,.07); }
+  .response-eyebrow { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#D45C7A; font-weight:500; margin-bottom:14px; }
+  .response-text { font-size:14px; line-height:1.85; color:#2C2C2C; font-weight:300; }
+  .response-text strong { font-weight:600; color:#8B2A42; display:block; margin:10px 0 6px; font-size:15px; font-family:'Playfair Display',serif; font-style:italic; }
+  .response-text p { margin-bottom:8px; }
+
+  .paywall-card { background:#FFF7F9; border-radius:20px; padding:28px 22px; width:100%; margin-top:6px; border:1.5px solid #D45C7A; text-align:center; }
+  .paywall-icon { font-size:36px; margin-bottom:12px; }
+  .paywall-title { font-family:'Playfair Display',serif; font-size:22px; color:#8B2A42; margin-bottom:10px; line-height:1.3; }
+  .paywall-sub { font-size:13px; color:#9C7080; font-weight:300; line-height:1.6; margin-bottom:20px; }
+  .paywall-price { font-size:28px; font-weight:600; color:#D45C7A; margin-bottom:4px; }
+  .paywall-trial { font-size:12px; color:#E8A0B0; margin-bottom:20px; font-weight:300; }
+  .btn-pay { width:100%; padding:17px; background:#D45C7A; color:white; border:none; border-radius:14px; font-family:'Poppins',sans-serif; font-size:15px; font-weight:500; cursor:pointer; text-decoration:none; display:block; text-align:center; -webkit-appearance:none; }
+  .btn-pay:active { background:#8B2A42; }
+
+  .error-note { background:#FFF5F5; border:1px solid #F0CECE; border-radius:12px; padding:16px; font-size:13px; color:#7A3A3A; line-height:1.6; width:100%; margin-top:12px; font-weight:300; }
+
+  .footer { margin-top:28px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .footer-zf { font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:#9C7080; opacity:.45; }
+  .footer-legal { font-size:10px; color:#9C7080; opacity:.35; font-weight:300; max-width:260px; line-height:1.5; }
+
+  .action-row { display:flex; flex-direction:column; gap:10px; width:100%; margin-top:18px; }
+  .mt24 { margin-top:24px; }
+
+  @media (prefers-reduced-motion: reduce) { .pulse-btn,.breath-circle { animation:none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <audio id="bg-music" loop>
+    <source src="/boton rosa relaxing music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- BIENVENIDA -->
+  <div class="screen active" id="s-welcome">
+    <div class="header">
+      <div class="brand-main">Botón Rosa</div>
+      <div class="brand-sub">Contención · Fuerza · Acompañamiento</div>
+      <div class="header-divider"></div>
+    </div>
+    <div class="welcome-eyebrow">Para cuando el miedo es demasiado</div>
+    <p class="welcome-title">No tenés que<br>estar bien<br><em>ahora mismo.</em></p>
+    <p class="welcome-sub">Este es tu espacio.<br>Sin explicaciones. Sin tener que ser fuerte.<br>Solo vos.</p>
+    <div class="pulse-wrap">
+      <button class="pulse-btn" onclick="goTo('s-usuario')">
+        <span class="pulse-btn-label">Necesito<br>un momento</span>
+        <span class="pulse-btn-sub">tocá aquí</span>
+      </button>
+      <p class="pulse-hint">Disponible cuando lo necesites</p>
+    </div>
+    <div class="footer">
+      <span class="footer-zf">· Zen Femenino ·</span>
+      <span class="footer-legal">Este espacio no reemplaza atención profesional.</span>
+    </div>
+  </div>
+
+  <!-- USUARIO -->
+  <div class="screen" id="s-usuario">
+    <div class="header">
+      <div class="brand-main">Botón Rosa</div>
+      <div class="header-divider"></div>
+    </div>
+    <p class="section-title">¿Desde dónde llegás?</p>
+    <p class="section-sub">Tu momento importa.<br>La respuesta se adapta a lo que estás viviendo.</p>
+    <div class="usuario-grid">
+      <div class="usuario-card" onclick="selectUsuario(this,'🌸','En tratamiento activo','quimioterapia, radioterapia o medicación oncológica en curso')">
+        <span class="usuario-icon">🌸</span>
+        <span class="usuario-label">Estoy en tratamiento</span>
+        <span class="usuario-sublabel">quimio, radio u otro</span>
+      </div>
+      <div class="usuario-card" onclick="selectUsuario(this,'🕊️','En espera de resultados','esperando diagnóstico, resultados o decisiones médicas')">
+        <span class="usuario-icon">🕊️</span>
+        <span class="usuario-label">Estoy esperando</span>
+        <span class="usuario-sublabel">resultados o diagnóstico</span>
+      </div>
+      <div class="usuario-card" onclick="selectUsuario(this,'🌿','En recuperación','finalizó el tratamiento pero el miedo y la incertidumbre siguen')">
+        <span class="usuario-icon">🌿</span>
+        <span class="usuario-label">Estoy recuperándome</span>
+        <span class="usuario-sublabel">después del tratamiento</span>
+      </div>
+      <div class="usuario-card" onclick="selectUsuario(this,'🤍','Acompañando a alguien','familiar o ser querido que acompaña a una persona en tratamiento')">
+        <span class="usuario-icon">🤍</span>
+        <span class="usuario-label">Acompaño a alguien</span>
+        <span class="usuario-sublabel">familiar o ser querido</span>
+      </div>
+    </div>
+    <button class="btn-main mt24" id="btn-continuar" disabled onclick="goTo('s-input')">Continuar</button>
+  </div>
+
+  <!-- INPUT -->
+  <div class="screen" id="s-input">
+    <div class="header">
+      <div class="brand-main">Botón Rosa</div>
+      <div class="header-divider"></div>
+    </div>
+    <button class="back-btn" onclick="goTo('s-usuario')">← Volver</button>
+    <div id="badge-input"></div>
+    <p class="section-title">¿Qué está pasando?</p>
+    <p class="feel-label" style="margin-top:8px">Escribí cómo te sentís ahora mismo, o tocá una o más opciones de abajo. Podés hacer las dos cosas.</p>
+    <textarea class="feel-textarea" id="feel-input"
+      placeholder="Tengo miedo, no sé qué va a pasar, me siento sola..."></textarea>
+    <p class="chips-label" style="margin-top:12px">O elegí lo que más te resuena</p>
+    <div class="chips">
+      <div class="chip" onclick="toggleChip(this,'Tengo miedo')">Tengo miedo</div>
+      <div class="chip" onclick="toggleChip(this,'Me siento sola')">Me siento sola</div>
+      <div class="chip" onclick="toggleChip(this,'Siento culpa')">Siento culpa</div>
+      <div class="chip" onclick="toggleChip(this,'No sé qué va a pasar')">No sé qué va a pasar</div>
+      <div class="chip" onclick="toggleChip(this,'Estoy agotada')">Estoy agotada</div>
+      <div class="chip" onclick="toggleChip(this,'No puedo parar de pensar')">No puedo parar de pensar</div>
+      <div class="chip" onclick="toggleChip(this,'Quiero llorar')">Quiero llorar</div>
+      <div class="chip" onclick="toggleChip(this,'Nadie entiende lo que siento')">Nadie entiende lo que siento</div>
+      <div class="chip" onclick="toggleChip(this,'Me cuesta respirar')">Me cuesta respirar</div>
+      <div class="chip" onclick="toggleChip(this,'Necesito calmarme')">Necesito calmarme</div>
+    </div>
+    <button class="btn-main" id="btn-ejercicio" disabled onclick="buscarEjercicio()">Quiero un momento para mí</button>
+  </div>
+
+  <!-- CARGANDO -->
+  <div class="screen" id="s-loading">
+    <div class="loading-wrap">
+      <div class="breath-circle"></div>
+      <p class="loading-text">Estoy aquí contigo.<br><strong style="font-weight:400">Inhalá suave… exhalá despacio.</strong></p>
+      <p class="loading-sub">Solo este momento. Solo este respiro.</p>
+    </div>
+  </div>
+
+  <!-- RESPUESTA -->
+  <div class="screen" id="s-response">
+    <div class="header">
+      <div class="brand-main">Botón Rosa</div>
+      <div class="header-divider"></div>
+    </div>
+    <div id="badge-response"></div>
+    <div id="response-content"></div>
+    <div class="action-row">
+      <button class="btn-main" onclick="otroEjercicio()">Quiero otro momento</button>
+      <button class="btn-ghost" onclick="detenerMusica(); goTo('s-welcome')">Volver al inicio</button>
+    </div>
+    <div class="footer" style="margin-top:24px">
+      <span class="footer-zf">· Zen Femenino ·</span>
+      <span class="footer-legal">Este espacio no reemplaza atención profesional.</span>
+    </div>
+  </div>
+
+  <!-- PAYWALL -->
+  <div class="screen" id="s-paywall">
+    <div class="header">
+      <div class="brand-main">Botón Rosa</div>
+      <div class="header-divider"></div>
+    </div>
+    <div class="paywall-card">
+      <div class="paywall-icon">🌸</div>
+      <p class="paywall-title">Tus primeros momentos<br>fueron gratuitos.</p>
+      <p class="paywall-sub">Botón Rosa está diseñado para estar ahí cada vez que lo necesités. Suscribite y tenés acceso ilimitado por menos de lo que cuesta un café.</p>
+      <p class="paywall-price">USD 9,99<span style="font-size:14px;font-weight:300;color:#9C7080">/mes</span></p>
+      <p class="paywall-trial">Cancelás cuando querés</p>
+      <a class="btn-pay" href="https://tez.lemonsqueezy.com/checkout/buy/9a2a4488-4494-4ebc-a247-e8b8ec4f4cde" target="_blank">Suscribirme</a>
+    </div>
+    <button class="btn-ghost" style="margin-top:12px" onclick="goTo('s-welcome')">Volver al inicio</button>
+    <div class="footer" style="margin-top:24px">
+      <span class="footer-zf">· Zen Femenino ·</span>
+      <span class="footer-legal">Este espacio no reemplaza atención profesional.</span>
+    </div>
+  </div>
+
+</div>
+<script>
+  let usuarioActual   = { icon:'', label:'', contexto:'' };
+  let chipsActivos    = [];
+  let ejercicioAnterior = '';
+  let usoCount = parseInt(localStorage.getItem('br_usos') || '0');
+
+  const CHIPS_LISTA = ['Tengo miedo','Me siento sola','Siento culpa','No sé qué va a pasar',
+    'Estoy agotada','No puedo parar de pensar','Quiero llorar',
+    'Nadie entiende lo que siento','Me cuesta respirar','Necesito calmarme'];
+
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  function selectUsuario(el, icon, label, contexto) {
+    document.querySelectorAll('.usuario-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    usuarioActual = { icon, label, contexto };
+    document.getElementById('btn-continuar').disabled = false;
+    const badge = `<div class="badge">${icon} ${label}</div>`;
+    document.getElementById('badge-input').innerHTML    = badge;
+    document.getElementById('badge-response').innerHTML = badge;
+  }
+
+  function toggleChip(el, texto) {
+    el.classList.toggle('active');
+    chipsActivos = el.classList.contains('active')
+      ? [...chipsActivos, texto]
+      : chipsActivos.filter(c => c !== texto);
+    const ta = document.getElementById('feel-input');
+    const libre = ta.value.split('. ')
+      .map(s => s.trim().replace(/\.$/, ''))
+      .filter(s => s && !CHIPS_LISTA.includes(s))
+      .join('. ');
+    const todo = [libre, ...chipsActivos].filter(Boolean).join('. ');
+    ta.value = todo ? todo + '.' : '';
+    document.getElementById('btn-ejercicio').disabled = !ta.value.trim();
+  }
+
+  document.getElementById('feel-input').addEventListener('input', function() {
+    document.getElementById('btn-ejercicio').disabled = !this.value.trim();
+  });
+
+  function iniciarMusica() {
+    const audio = document.getElementById('bg-music');
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+  }
+
+  function toggleMusica() {
+    const audio = document.getElementById('bg-music');
+    const btn = document.getElementById('btn-musica');
+    if (audio.paused) { audio.play(); btn.innerHTML = '🔊 música'; }
+    else { audio.pause(); btn.innerHTML = '🔇 música'; }
+  }
+
+  function detenerMusica() {
+    const audio = document.getElementById('bg-music');
+    audio.pause();
+    audio.currentTime = 0;
+  }
+
+  async function buscarEjercicio() {
+    if (usoCount >= 3) { goTo('s-paywall'); return; }
+    const texto = document.getElementById('feel-input').value.trim();
+    if (!texto) return;
+    goTo('s-loading');
+
+    try {
+      const res = await fetch('/api/ejercicio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          perfil: `${usuarioActual.label} — ${usuarioActual.contexto}`,
+          situacion: texto,
+          ejercicioAnterior: ejercicioAnterior || ''
+        })
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+
+      ejercicioAnterior = data.texto;
+      usoCount++;
+      localStorage.setItem('br_usos', usoCount.toString());
+
+      const html = data.texto
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .split('\n').map(l => `<p>${l}</p>`).join('');
+
+      document.getElementById('response-content').innerHTML =
+        `<div class="response-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="response-eyebrow" style="margin-bottom:0">Tu momento · ahora mismo</div>
+            <button onclick="toggleMusica()" id="btn-musica" style="background:none;border:1px solid #F0C0CC;border-radius:20px;padding:4px 10px;font-size:11px;color:#E8A0B0;cursor:pointer;font-family:Poppins,sans-serif;">🔊 música</button>
+          </div>
+          <div class="response-text">${html}</div>
+        </div>`;
+
+      iniciarMusica();
+      goTo('s-response');
+    } catch(e) {
+      document.getElementById('response-content').innerHTML =
+        `<div class="error-note"><strong>Algo falló.</strong><br><br>
+        Apoyá una mano en el pecho. Sentí tu corazón latir.
+        Tres respiraciones lentas. Estás acá. Eso es suficiente.</div>`;
+      goTo('s-response');
+    }
+  }
+
+  function otroEjercicio() {
+    if (usoCount >= 3) { goTo('s-paywall'); return; }
+    document.getElementById('feel-input').value = '';
+    chipsActivos = [];
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    document.getElementById('btn-ejercicio').disabled = true;
+    detenerMusica();
+    goTo('s-input');
+  }
+</script>
+</body>
+</html>
