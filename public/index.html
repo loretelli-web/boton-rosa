@@ -230,8 +230,15 @@
       <p class="paywall-title">Tus primeros momentos<br>fueron gratuitos.</p>
       <p class="paywall-sub">Botón Rosa está diseñado para estar ahí cada vez que lo necesités. Suscribite y tenés acceso ilimitado por menos de lo que cuesta un café.</p>
       <p class="paywall-price">USD 9,99<span style="font-size:14px;font-weight:300;color:#9C7080">/mes</span></p>
-      <p class="paywall-trial">Cancelás cuando querés</p>
-      <a class="btn-pay" href="https://tez.lemonsqueezy.com/checkout/buy/9a2a4488-4494-4ebc-a247-e8b8ec4f4cde" target="_blank">Suscribirme</a>
+      <p class="paywall-trial">5 días de prueba gratuita · Cancelás cuando querés</p>
+      <a class="btn-pay" href="https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=bc93be235a414c419ff122bc64c591d6" target="_blank">Suscribirme · 5 días gratis</a>
+      <div style="margin-top:24px; padding-top:22px; border-top:1px solid #F0D8DE;">
+        <p style="font-size:13px; color:#8B2A42; margin-bottom:4px; font-weight:500;">¿Ya te suscribiste?</p>
+        <p style="font-size:12px; color:#9C7080; margin-bottom:12px; font-weight:300;">Ingresá el mismo email con el que te suscribiste y desbloqueá tu acceso.</p>
+        <input type="email" id="email-input" placeholder="tu@email.com" style="width:100%; padding:13px; border:1.5px solid #F0C0CC; border-radius:10px; font-family:'Poppins',sans-serif; font-size:14px; text-align:center; outline:none; margin-bottom:10px;">
+        <button class="btn-pay" style="background:#8B2A42;" onclick="desbloquearConEmail()">Desbloquear mi acceso</button>
+        <p id="email-error" style="display:none; font-size:12px; color:#C0392B; margin-top:8px;">Ingresá un email válido.</p>
+      </div>
     </div>
     <button class="btn-ghost" style="margin-top:12px" onclick="goTo('s-welcome')">Volver al inicio</button>
     <div class="footer" style="margin-top:24px">
@@ -246,6 +253,24 @@
   let chipsActivos    = [];
   let ejercicioAnterior = '';
   let usoCount = parseInt(localStorage.getItem('br_usos') || '0');
+  let esSuscriptor = localStorage.getItem('br_suscriptor') === 'si';
+
+  function desbloquearConEmail() {
+    const input = document.getElementById('email-input');
+    const error = document.getElementById('email-error');
+    const email = (input.value || '').trim().toLowerCase();
+    const valido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!valido) { error.style.display = 'block'; return; }
+    error.style.display = 'none';
+    let lista = [];
+    try { lista = JSON.parse(localStorage.getItem('br_emails') || '[]'); } catch(e) { lista = []; }
+    if (!lista.includes(email)) lista.push(email);
+    localStorage.setItem('br_emails', JSON.stringify(lista));
+    localStorage.setItem('br_email_suscriptor', email);
+    localStorage.setItem('br_suscriptor', 'si');
+    esSuscriptor = true;
+    goTo('s-input');
+  }
 
   const CHIPS_LISTA = ['Tengo miedo','Me siento sola','Siento culpa','No sé qué va a pasar',
     'Estoy agotada','No puedo parar de pensar','Quiero llorar',
@@ -306,7 +331,7 @@
   }
 
   async function buscarEjercicio() {
-    if (usoCount >= 3) { goTo('s-paywall'); return; }
+    if (!esSuscriptor && usoCount >= 3) { goTo('s-paywall'); return; }
     const texto = document.getElementById('feel-input').value.trim();
     if (!texto) return;
     goTo('s-loading');
@@ -353,7 +378,7 @@
   }
 
   function otroEjercicio() {
-    if (usoCount >= 3) { goTo('s-paywall'); return; }
+    if (!esSuscriptor && usoCount >= 3) { goTo('s-paywall'); return; }
     document.getElementById('feel-input').value = '';
     chipsActivos = [];
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
